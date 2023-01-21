@@ -7,6 +7,10 @@ export const ping = (req: Request, res: Response) => {
   res.json({ pong: true });
 };
 
+export const index = (req: Request, res: Response) => {
+  res.render("pages/index");
+};
+
 export const register = async (req: Request, res: Response) => {
   if (req.body.email && req.body.password) {
     let { email, password } = req.body;
@@ -31,12 +35,14 @@ export const login = async (req: Request, res: Response) => {
     const user = await UserService.findByEmail(email);
 
     if (user && UserService.matchPassword(password, user.password)) {
-      res.json({ status: true });
+      res.render("pages/user/user");
+      //res.json({ status: true });
       return;
     }
   }
 
-  res.json({ status: false });
+  res.redirect("/");
+  //res.json({ status: false });
 };
 
 export const list = async (req: Request, res: Response) => {
