@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import * as UserService from "../services/userService";
+import JWT from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 export const ping = (req: Request, res: Response) => {
   console.log("ping");
@@ -20,11 +22,22 @@ export const register = async (req: Request, res: Response) => {
       return res.json({ error: newUser.message });
     } else {
       res.status(201);
-      return res.json({ id: newUser.id });
+      const token = JWT.sign(
+        { id: newUser.id, email: newUser.email },
+        process.env.JWT_SECRET_KEY as string,
+        { expiresIn: "2h" }
+      );
+      req.headers.authorization = "Bearer " + token;
+      res.render("pages/index", { token });
+      return;
     }
   }
 
   res.json({ error: "E-mail e/ou senha não enviados." });
+};
+
+export const getlogin = (req: Request, res: Response) => {
+  res.render("pages/user/login");
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -34,14 +47,23 @@ export const login = async (req: Request, res: Response) => {
 
     const user = await UserService.findByEmail(email);
 
-    if (user && UserService.matchPassword(password, user.password)) {
-      res.render("pages/user/user");
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const token = JWT.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET_KEY as string,
+        { expiresIn: "12h" }
+      );
+
+      req.headers.authorization = "Bearer " + token;
+      console.log("token do form: ", req.headers.authorization);
+
+      res.render("pages/index", { token });
       //res.json({ status: true });
       return;
     }
   }
 
-  res.redirect("/");
+  res.redirect("/login");
   //res.json({ status: false });
 };
 
@@ -53,5 +75,5 @@ export const list = async (req: Request, res: Response) => {
     list.push(users[i].email);
   }
 
-  res.json({ list });
+  res.render("/pages/user/list", { list });
 };
