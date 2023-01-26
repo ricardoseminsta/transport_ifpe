@@ -10,7 +10,49 @@ export const ping = (req: Request, res: Response) => {
 };
 
 export const index = (req: Request, res: Response) => {
-  res.json({ list: "Lista de viagens" });
+  res.render("pages/index");
+};
+
+export const getLogin = (req: Request, res: Response) => {
+  console.log(req.headers.cookie);
+  let cookie = req.headers.cookie?.split("=");
+
+  if (cookie) {
+    if (cookie[0] === "auth") {
+      cookie[1] = decodeURI(cookie[1]);
+      req.headers.authorization = cookie[1];
+    }
+  }
+
+  console.log(req.headers.authorization);
+  res.render("pages/user/login");
+};
+
+export const login = async (req: Request, res: Response) => {
+  if (req.body.email && req.body.password) {
+    let email: string = req.body.email;
+    let password: string = req.body.password;
+
+    const user = await UserService.findByEmail(email);
+
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const token = JWT.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET_KEY as string,
+        { expiresIn: "12h" }
+      );
+      req.headers.authorization = "Bearer " + token;
+      // console.log("token do form: ", req.headers.authorization);
+      // Cookies.set("auth", req.headers.authorization);
+      // res.cookie("auth", req.headers.authorization);
+      console.log(req.cookies);
+
+      res.render("pages/index");
+      return;
+    }
+  }
+
+  res.redirect("/login");
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -33,34 +75,7 @@ export const register = async (req: Request, res: Response) => {
     }
   }
 
-  res.json({ error: "E-mail e/ou senha não enviados." });
-};
-
-export const login = async (req: Request, res: Response) => {
-  if (req.body.email && req.body.password) {
-    let email: string = req.body.email;
-    let password: string = req.body.password;
-
-    const user = await UserService.findByEmail(email);
-
-    if (user && bcrypt.compareSync(password, user.password)) {
-      const token = JWT.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "12h" }
-      );
-
-      req.headers.authorization = "Bearer " + token;
-      // console.log("token do form: ", req.headers.authorization);
-      res.cookie("token name", "valor encriptado");
-      console.log(req.cookies);
-
-      res.json({ status: true, token });
-      return;
-    }
-  }
-
-  res.json({ status: false });
+  res.render("/pages/user/register");
 };
 
 export const list = async (req: Request, res: Response) => {
@@ -71,5 +86,10 @@ export const list = async (req: Request, res: Response) => {
     list.push(users[i].email);
   }
 
-  res.json({ list });
+  res.render("pages/user/list");
+};
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("auth");
+  res.redirect("/login");
 };

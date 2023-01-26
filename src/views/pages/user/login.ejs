@@ -2,6 +2,7 @@
     <%- include('../partials/header.ejs') %>
         <div class="container col-12 col-xl-4">
             <h1 class="pb-3 text-center">Login</h1>
+
             <form method="post" action="/login">
                 <div class="form-outline mb-4">
                     <input type="text" name="email" id="email" class="form-control" placeholder="Digite o email" />
@@ -19,5 +20,8 @@
 
 
             </form>
+
+            <p>Usuario se encontra logado</p>
+
         </div>
         <%- include('../partials/footer.ejs') %>

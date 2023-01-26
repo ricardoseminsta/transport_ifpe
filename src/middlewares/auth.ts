@@ -8,14 +8,21 @@ export const Auth = {
   private: async (req: Request, res: Response, next: NextFunction) => {
     //fazer verificação de auth
     let success = false;
-    console.log("Autho  ", req.headers.authorization);
+    // console.log("Autho  ", req.headers.cookie?.split("="));
 
+    let cookie = req.headers.cookie?.split("=");
+
+    if (cookie) {
+      if (cookie[0] === "auth") {
+        cookie[1] = decodeURI(cookie[1]);
+        req.headers.authorization = cookie[1];
+      }
+    }
+    // console.log("HEADER", req.headers.authorization);
     if (req.headers.authorization) {
       const [authType, token] = req.headers.authorization.split(" ");
       if (authType === "Bearer") {
         // console.log("TOKEN", token);
-        console.log("cookie ", req.headers.cookie);
-
         try {
           const decoded = JWT.verify(
             token,
