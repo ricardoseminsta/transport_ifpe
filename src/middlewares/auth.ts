@@ -13,7 +13,8 @@ export const Auth = {
     if (req.headers.authorization) {
       const [authType, token] = req.headers.authorization.split(" ");
       if (authType === "Bearer") {
-        console.log("TOKEN", token);
+        // console.log("TOKEN", token);
+        console.log("cookie ", req.headers.cookie);
 
         try {
           const decoded = JWT.verify(

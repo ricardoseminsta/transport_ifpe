@@ -51,7 +51,9 @@ export const login = async (req: Request, res: Response) => {
       );
 
       req.headers.authorization = "Bearer " + token;
-      console.log("token do form: ", req.headers.authorization);
+      // console.log("token do form: ", req.headers.authorization);
+      res.cookie("token name", "valor encriptado");
+      console.log(req.cookies);
 
       res.json({ status: true, token });
       return;
