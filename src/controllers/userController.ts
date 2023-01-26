@@ -10,7 +10,7 @@ export const ping = (req: Request, res: Response) => {
 };
 
 export const index = (req: Request, res: Response) => {
-  res.render("pages/index");
+  res.json({ list: "Lista de viagens" });
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -28,16 +28,12 @@ export const register = async (req: Request, res: Response) => {
         { expiresIn: "2h" }
       );
       req.headers.authorization = "Bearer " + token;
-      res.render("pages/index", { token });
+      res.json({ id: newUser.id, token });
       return;
     }
   }
 
   res.json({ error: "E-mail e/ou senha não enviados." });
-};
-
-export const getlogin = (req: Request, res: Response) => {
-  res.render("pages/user/login");
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -57,14 +53,12 @@ export const login = async (req: Request, res: Response) => {
       req.headers.authorization = "Bearer " + token;
       console.log("token do form: ", req.headers.authorization);
 
-      res.render("pages/index", { token });
-      //res.json({ status: true });
+      res.json({ status: true, token });
       return;
     }
   }
 
-  res.redirect("/login");
-  //res.json({ status: false });
+  res.json({ status: false });
 };
 
 export const list = async (req: Request, res: Response) => {
@@ -75,5 +69,5 @@ export const list = async (req: Request, res: Response) => {
     list.push(users[i].email);
   }
 
-  res.render("/pages/user/list", { list });
+  res.json({ list });
 };
