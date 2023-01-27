@@ -1,27 +1,39 @@
-<%- include('../partials/head.ejs') %>
-    <%- include('../partials/header.ejs') %>
-        <div class="container col-12 col-xl-4">
-            <h1 class="pb-3 text-center">Login</h1>
+<%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
+<div class="container col-12 col-xl-4">
+  <h1 class="pb-3 text-center">Login</h1>
+  <% if (isLogged === false) { %>
+  <form method="post" action="/login">
+    <div class="form-outline mb-4">
+      <input
+        type="text"
+        name="email"
+        id="email"
+        class="form-control"
+        placeholder="Digite o email"
+      />
+      <label class="form-label" for="name">Email</label>
+    </div>
 
-            <form method="post" action="/login">
-                <div class="form-outline mb-4">
-                    <input type="text" name="email" id="email" class="form-control" placeholder="Digite o email" />
-                    <label class="form-label" for="name">Email</label>
-                </div>
+    <div class="form-outline mb-4">
+      <input
+        type="password"
+        name="password"
+        id="password"
+        class="form-control"
+        placeholder="Digite a senha"
+      />
+      <label class="form-label" for="cpf">Senha</label>
+    </div>
 
-                <div class="form-outline mb-4">
-                    <input type="password" name="password" id="password" class="form-control"
-                        placeholder="Digite a senha" />
-                    <label class="form-label" for="cpf">Senha</label>
-                </div>
-
-                <!-- Submit button -->
-                <button type="submit" class="btn btn-primary btn-block mb-4">Logar</button>
-
-
-            </form>
-
-            <p>Usuario se encontra logado</p>
-
-        </div>
-        <%- include('../partials/footer.ejs') %>
+    <!-- Submit button -->
+    <div class="d-grid gap-2 d-md-block">
+      <button type="submit" class="btn btn-primary mb-4">Logar</button>
+    </div>
+  </form>
+  <% } else { %>
+  <p>Usuario se encontra logado</p>
+  <p>Id <%= decoded.id %></p>
+  <p>User <%= decoded.email %></p>
+  <% } %>
+</div>
+<%- include('../partials/footer.ejs') %>

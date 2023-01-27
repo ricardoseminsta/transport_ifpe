@@ -14,7 +14,10 @@ export const index = (req: Request, res: Response) => {
 };
 
 export const getLogin = (req: Request, res: Response) => {
-  console.log(req.headers.cookie);
+  let isLogged = false;
+  let decoded = {};
+
+  console.log("COOKIE GETlOGIN: ", req.headers.cookie);
   let cookie = req.headers.cookie?.split("=");
 
   if (cookie) {
@@ -23,9 +26,20 @@ export const getLogin = (req: Request, res: Response) => {
       req.headers.authorization = cookie[1];
     }
   }
+  if (req.headers.authorization) {
+    const [authType, token] = req.headers.authorization.split(" ");
+    if (authType === "Bearer") {
+      // console.log("TOKEN", token);
+      try {
+        decoded = JWT.verify(token, process.env.JWT_SECRET_KEY as string);
+        console.log("DECODED", decoded);
+        isLogged = true;
+      } catch (error) {}
+    }
+  }
 
-  console.log(req.headers.authorization);
-  res.render("pages/user/login");
+  // console.log(req.headers.authorization);
+  res.render("pages/user/login", { isLogged, decoded });
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -44,8 +58,8 @@ export const login = async (req: Request, res: Response) => {
       req.headers.authorization = "Bearer " + token;
       // console.log("token do form: ", req.headers.authorization);
       // Cookies.set("auth", req.headers.authorization);
-      // res.cookie("auth", req.headers.authorization);
-      console.log(req.cookies);
+      res.cookie("auth", req.headers.authorization);
+      // console.log(req.cookies);
 
       res.render("pages/index");
       return;
@@ -55,11 +69,15 @@ export const login = async (req: Request, res: Response) => {
   res.redirect("/login");
 };
 
-export const register = async (req: Request, res: Response) => {
-  if (req.body.email && req.body.password) {
-    let { email, password } = req.body;
+export const getRegister = (req: Request, res: Response) => {
+  res.render("pages/user/register");
+};
 
-    const newUser = await UserService.createUser(email, password);
+export const register = async (req: Request, res: Response) => {
+  if (req.body.email && req.body.password && req.body.profile) {
+    let { email, password, profile } = req.body;
+
+    const newUser = await UserService.createUser(email, password, profile);
     if (newUser instanceof Error) {
       return res.json({ error: newUser.message });
     } else {
@@ -67,15 +85,15 @@ export const register = async (req: Request, res: Response) => {
       const token = JWT.sign(
         { id: newUser.id, email: newUser.email },
         process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "2h" }
+        { expiresIn: "12h" }
       );
       req.headers.authorization = "Bearer " + token;
-      res.json({ id: newUser.id, token });
+      res.cookie("auth", req.headers.authorization);
+      res.redirect("/");
       return;
     }
   }
-
-  res.render("/pages/user/register");
+  res.redirect("/register");
 };
 
 export const list = async (req: Request, res: Response) => {

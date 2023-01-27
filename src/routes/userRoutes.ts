@@ -6,6 +6,7 @@ import * as UserController from "../controllers/userController";
 const router = Router();
 
 router.post("/register", UserController.register);
+router.get("/register", UserController.getRegister);
 
 router.get("/login", UserController.getLogin);
 router.post("/login", UserController.login);

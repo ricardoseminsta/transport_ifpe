@@ -5,6 +5,7 @@ export interface UserInstance extends Model {
   id: number;
   email: string;
   password: string;
+  profile: "SP88" | "PR10" | "MT18";
 }
 
 export const User = sequelize.define<UserInstance>(
@@ -22,6 +23,9 @@ export const User = sequelize.define<UserInstance>(
     password: {
       type: DataTypes.STRING,
     },
+    profile: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: "users",
@@ -29,4 +33,4 @@ export const User = sequelize.define<UserInstance>(
   }
 );
 
-// User.sync({ alter: true });
+// User.sync({ force: true });

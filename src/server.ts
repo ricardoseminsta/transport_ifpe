@@ -24,7 +24,7 @@ server.use(cookieParser());
 
 server.use((req: Request, res: Response) => {
   res.status(404);
-  res.json({ error: "Endpoint não encontrado." });
+  res.render("pages/404");
 });
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {

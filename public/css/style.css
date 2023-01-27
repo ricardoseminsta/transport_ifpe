@@ -1,0 +1,7 @@
+.transition {
+  transition: all 1s ease;
+}
+
+#alert {
+  display: none;
+}
