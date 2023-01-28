@@ -1,7 +1,12 @@
-.transition {
-  transition: all 1s ease;
+.box--hidden {
+  opacity: 0;
 }
 
-#alert {
-  display: none;
+.box--show {
+  display: flex !important;
+  opacity: 1;
+}
+
+.transition {
+  transition: all 0.4s ease;
 }

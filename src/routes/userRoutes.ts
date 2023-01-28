@@ -12,8 +12,10 @@ router.get("/login", UserController.getLogin);
 router.post("/login", UserController.login);
 router.get("/logout", UserController.logout);
 
-router.get("/", Auth.private, UserController.index);
+router.get("/user/list", Auth.private, UserController.list);
+router.get("/user/:id", Auth.private, UserController.getUpdate);
+router.post("/user", Auth.private, UserController.update);
 
-router.get("/list", Auth.private, UserController.list);
+router.get("/", Auth.private, UserController.index);
 
 export default router;

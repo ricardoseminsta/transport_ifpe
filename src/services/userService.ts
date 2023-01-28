@@ -24,6 +24,10 @@ export const findByEmail = async (email: string) => {
   return await User.findOne({ where: { email } });
 };
 
+export const findById = async (id: number) => {
+  return await User.findOne({ where: { id } });
+};
+
 export const matchPassword = (passwordText: string, encrypted: string) => {
   return bcrypt.compareSync(passwordText, encrypted);
 };

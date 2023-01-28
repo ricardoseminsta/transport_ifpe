@@ -96,6 +96,44 @@ export const register = async (req: Request, res: Response) => {
   res.redirect("/register");
 };
 
+export const getUpdate = async (req: Request, res: Response) => {
+  const id: number = parseInt(req.params.id);
+  const user = await UserService.findById(id);
+
+  let textProfile = "";
+  if (user) {
+    switch (user.profile) {
+      case "SP88":
+        textProfile = "Servidor";
+        break;
+      case "PR10":
+        textProfile = "Portaria";
+        break;
+      case "MT18":
+        textProfile = "Motorista";
+        break;
+    }
+  }
+
+  res.render("pages/user/user", { user, textProfile });
+};
+
+export const update = async (req: Request, res: Response) => {
+  let id = parseInt(req.body.id);
+  let email = req.body.nemail as string;
+  let profile = req.body.nprofile as "SP88" | "PR10" | "MT18";
+
+  const user = await UserService.findById(id);
+  if (user) {
+    user.email = email;
+    user.profile = profile;
+    await user.save();
+  }
+  console.log("id do update ", user);
+
+  res.redirect("/user/list");
+};
+
 export const list = async (req: Request, res: Response) => {
   let users = await UserService.all();
   let list: string[] = [];
@@ -103,8 +141,9 @@ export const list = async (req: Request, res: Response) => {
   for (let i in users) {
     list.push(users[i].email);
   }
+  console.log(users[0].email);
 
-  res.render("pages/user/list");
+  res.render("pages/user/list", { users });
 };
 
 export const logout = (req: Request, res: Response) => {
