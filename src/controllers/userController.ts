@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import * as UserService from "../services/userService";
 import JWT from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { ProfileType } from "../types/ProfileType";
 
 export const ping = (req: Request, res: Response) => {
   console.log("ping");
@@ -102,7 +103,7 @@ export const getUpdate = async (req: Request, res: Response) => {
 
   let textProfile = "";
   if (user) {
-    switch (user.profile) {
+    switch (user.profile as string) {
       case "SP88":
         textProfile = "Servidor";
         break;
@@ -121,13 +122,13 @@ export const getUpdate = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   let id = parseInt(req.body.id);
   let email = req.body.nemail as string;
-  let profile = req.body.nprofile as "SP88" | "PR10" | "MT18";
+  let profile = req.body.nprofile as string;
 
   const user = await UserService.findById(id);
   if (user) {
     user.email = email;
     user.profile = profile;
-    await user.save();
+    user.save();
   }
   console.log("id do update ", user);
 

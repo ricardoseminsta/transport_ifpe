@@ -1,5 +1,5 @@
 <%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
-        <div class="container col-12 col-xl-4 text-center">
+        <div class="container col-12 col-xl-4">
             <h1>Usuario <%= user.email %>
             </h1>
             <form method="post" action="/user" id="update-user">
@@ -23,10 +23,28 @@
 
                 <div class="form-outline mb-4">
                     <select class="form-select" aria-label="Escolha o perfil do Usuário" id="nprofile" name="nprofile">
-                        <option selected value="">Escolha o novo perfil do Usuário</option>
-                        <option value="SP88">Servidor</option>
-                        <option value="PR10">Portaria</option>
-                        <option value="MT18">Mororista</option>
+                        <% switch (user.profile) { case "SP88" : %>
+                            <option value="">Escolha o novo perfil do Usuário</option>
+                            <option value="SP88" selected>Servidor</option>
+                            <option value="PR10">Portaria</option>
+                            <option value="MT18">Mororista</option>
+                            <% break; case "PR10" : %>
+                                <option value="">Escolha o novo perfil do Usuário</option>
+                                <option value="SP88">Servidor</option>
+                                <option value="PR10" selected>Portaria</option>
+                                <option value="MT18">Mororista</option>
+                                <% break; case "MT18" : %>
+                                    <option value="">Escolha o novo perfil do Usuário</option>
+                                    <option value="SP88">Servidor</option>
+                                    <option value="PR10">Portaria</option>
+                                    <option value="MT18" selected>Mororista</option>
+                                    <% break; case "" : %>
+                                        <option value="" selected>Escolha o novo perfil do Usuário</option>
+                                        <option value="SP88">Servidor</option>
+                                        <option value="PR10">Portaria</option>
+                                        <option value="MT18">Mororista</option>
+                                        <% break;} %>
+
                     </select>
                     <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
                 </div>
@@ -39,7 +57,7 @@
             </form>
 
             <div class="alert alert-danger box--hidden" role="alert" id="alert" name="alert">
-                <div>É Obrigatório o preenchimento de <strong>todos os campos</strong></div>
+                <div>É Obrigatório o preenchimento de <strong>pelo menos um dos campos</strong></div>
             </div>
         </div>
         <%- include('../partials/footer.ejs') %>

@@ -34,8 +34,9 @@ function validateRegister() {
 
       confirm(
         `Confirme os dados:\nEmail: ${email.value}\nPerfil: ${texProfile}`
-      );
-      registerForm.submit();
+      ) == true
+        ? registerForm.submit()
+        : window.location.reload();
     }
   });
 }
@@ -48,7 +49,7 @@ function validateUpdate() {
     let email = document.getElementById("nemail");
     let profile = document.getElementById("nprofile");
 
-    if (email.value == "" || profile.value == "") {
+    if (email.value == "" && profile.value == "") {
       let alert = document.getElementById("alert");
       alert.classList.remove("box--hidden");
       alert.classList.add("transition");
@@ -75,8 +76,9 @@ function validateUpdate() {
 
       confirm(
         `Confirme os dados:\nEmail: ${email.value}\nPerfil: ${textProfile}`
-      );
-      updateUserForm.submit();
+      ) == true
+        ? updateUserForm.submit()
+        : window.location.reload();
     }
   });
 }
