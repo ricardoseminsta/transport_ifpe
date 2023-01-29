@@ -1,5 +1,5 @@
 function validateRegister() {
-  registerForm = document.getElementById("register-form");
+  let registerForm = document.getElementById("register-form");
 
   registerForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ function validateRegister() {
 }
 
 function validateUpdate() {
-  updateUserForm = document.getElementById("update-user");
+  let updateUserForm = document.getElementById("update-user");
 
   updateUserForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -81,4 +81,9 @@ function validateUpdate() {
         : window.location.reload();
     }
   });
+}
+function deleteUserForm() {
+  let deleteUser = document.getElementById("delete-user");
+  deleteUser.preventDefault();
+  console.log("javascript console");
 }

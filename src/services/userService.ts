@@ -10,7 +10,7 @@ export const createUser = async (
   if (!hasUser) {
     const hash = bcrypt.hashSync(password, 10);
     const newUser = await User.create({
-      email,
+      email: email.toLocaleLowerCase(),
       password: hash,
       profile,
     });
@@ -32,6 +32,32 @@ export const matchPassword = (passwordText: string, encrypted: string) => {
   return bcrypt.compareSync(passwordText, encrypted);
 };
 
-export const all = async () => {
-  return await User.findAll();
+export const allActive = async () => {
+  return await User.findAll({ where: { active: true } });
+};
+
+export const updateUserById = async (
+  id: number,
+  email?: string,
+  profile?: string
+) => {
+  const user = await User.findOne({ where: { id } });
+  if (user) {
+    user.set({
+      email: email?.toLocaleLowerCase(),
+      profile,
+    });
+    await user.save();
+    return;
+  } else {
+    return new Error(`User ${email} already exists`);
+  }
+};
+
+export const deleteUser = async (id: number) => {
+  const user = await User.findByPk(id);
+  if (user) {
+    user.set({ active: false });
+    await user.save();
+  }
 };

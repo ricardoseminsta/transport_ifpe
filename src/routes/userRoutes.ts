@@ -15,6 +15,7 @@ router.get("/logout", UserController.logout);
 router.get("/user/list", Auth.private, UserController.list);
 router.get("/user/:id", Auth.private, UserController.getUpdate);
 router.post("/user", Auth.private, UserController.update);
+router.post("/user/delete", Auth.private, UserController.deleteUser);
 
 router.get("/", Auth.private, UserController.index);
 

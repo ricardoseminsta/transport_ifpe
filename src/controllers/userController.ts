@@ -80,7 +80,7 @@ export const register = async (req: Request, res: Response) => {
 
     const newUser = await UserService.createUser(email, password, profile);
     if (newUser instanceof Error) {
-      return res.json({ error: newUser.message });
+      return res.render("pages/error", { newUser });
     } else {
       res.status(201);
       const token = JWT.sign(
@@ -124,19 +124,17 @@ export const update = async (req: Request, res: Response) => {
   let email = req.body.nemail as string;
   let profile = req.body.nprofile as string;
 
-  const user = await UserService.findById(id);
-  if (user) {
-    user.email = email;
-    user.profile = profile;
-    user.save();
+  const updateUser = UserService.updateUserById(id, email, profile);
+
+  if (updateUser instanceof Error) {
+    return res.render("pages/error", { updateUser });
   }
-  console.log("id do update ", user);
 
   res.redirect("/user/list");
 };
 
 export const list = async (req: Request, res: Response) => {
-  let users = await UserService.all();
+  let users = await UserService.allActive();
   let list: string[] = [];
 
   for (let i in users) {
@@ -145,6 +143,14 @@ export const list = async (req: Request, res: Response) => {
   console.log(users[0].email);
 
   res.render("pages/user/list", { users });
+};
+
+export const deleteUser = (req: Request, res: Response) => {
+  let id = parseInt(req.body.id);
+  console.log("controller delete id ", id);
+
+  UserService.deleteUser(id);
+  res.redirect("/user/list");
 };
 
 export const logout = (req: Request, res: Response) => {
