@@ -1,5 +1,7 @@
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
+import JWT, { JwtPayload } from "jsonwebtoken";
+import dotenv from "dotenv";
 
 export const createUser = async (
   email: string,
@@ -54,10 +56,30 @@ export const updateUserById = async (
   }
 };
 
+export const getProfile = async (id: number) => {
+  const user = await User.findByPk(id);
+  if (user) {
+    return user.profile;
+  }
+};
+
 export const deleteUser = async (id: number) => {
   const user = await User.findByPk(id);
   if (user) {
     user.set({ active: false });
     await user.save();
+  }
+};
+
+export const decodedUser = async (authorizationHearder: string) => {
+  const [authType, token] = authorizationHearder.split(" ");
+  if (authType === "Bearer") {
+    // console.log("TOKEN", token);
+    try {
+      let decodedUser = JWT.verify(token, process.env.JWT_SECRET_KEY as string);
+      return decodedUser as JwtPayload;
+    } catch (error) {
+      return undefined;
+    }
   }
 };

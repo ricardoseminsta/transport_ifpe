@@ -44,6 +44,8 @@ export const getLogin = (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+  res.clearCookie("connect.sid");
+  res.clearCookie("auth");
   if (req.body.email && req.body.password) {
     let email: string = req.body.email;
     let password: string = req.body.password;
@@ -52,7 +54,7 @@ export const login = async (req: Request, res: Response) => {
 
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = JWT.sign(
-        { id: user.id, email: user.email },
+        { id: user.id, email: user.email, profile: user.profile },
         process.env.JWT_SECRET_KEY as string,
         { expiresIn: "12h" }
       );
@@ -75,6 +77,8 @@ export const getRegister = (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
+  res.clearCookie("connect.sid");
+  res.clearCookie("auth");
   if (req.body.email && req.body.password && req.body.profile) {
     let { email, password, profile } = req.body;
 
@@ -134,15 +138,26 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const list = async (req: Request, res: Response) => {
-  let users = await UserService.allActive();
-  let list: string[] = [];
+  let decodedUser = await UserService.decodedUser(
+    req.headers.authorization as string
+  );
 
-  for (let i in users) {
-    list.push(users[i].email);
+  if (decodedUser) {
+    if (decodedUser.profile == "SU01") {
+      let users = await UserService.allActive();
+      let list: string[] = [];
+
+      for (let i in users) {
+        list.push(users[i].email);
+      }
+      console.log(users[0].email);
+
+      return res.render("pages/user/list", { users });
+    }
   }
-  console.log(users[0].email);
-
-  res.render("pages/user/list", { users });
+  return res.render("pages/error", {
+    message: "O seu Perfil de usuário não tem acesso a essa página",
+  });
 };
 
 export const deleteUser = (req: Request, res: Response) => {

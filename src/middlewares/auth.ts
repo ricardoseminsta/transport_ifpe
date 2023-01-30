@@ -28,7 +28,7 @@ export const Auth = {
             token,
             process.env.JWT_SECRET_KEY as string
           );
-          console.log("DECODED", decoded);
+          console.log("decoded", decoded);
           success = true;
         } catch (error) {}
       }

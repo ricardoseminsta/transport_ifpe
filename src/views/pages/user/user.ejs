@@ -1,63 +1,103 @@
 <%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
-        <div class="container col-12 col-xl-4">
-            <h1>Usuario <%= user.email %>
-            </h1>
-            <form method="post" action="/user" id="update-user">
-                <div class="form-outline mb-4">
-                    <input type="hidden" name="id" id="id" class="form-control" value="<%= user.id %>" />
-                    <input type="text" name="email" id="email" class="form-control" placeholder="Digite o email"
-                        value="<%= user.email %>" disabled />
-                    <label class="form-label" for="email">Email Atual</label>
-                </div>
-                <div class="form-outline mb-4">
-                    <input type="text" name="nemail" id="nemail" class="form-control"
-                        placeholder="Digite o novo email" />
-                    <label class="form-label" for="nemail">Novo Email</label>
-                </div>
+<div class="container col-12 col-xl-4">
+  <h1>Usuario <%= user.email %></h1>
+  <form method="post" action="/user" id="update-user">
+    <div class="form-outline mb-4">
+      <input
+        type="hidden"
+        name="id"
+        id="id"
+        class="form-control"
+        value="<%= user.id %>"
+      />
+      <input
+        type="text"
+        name="email"
+        id="email"
+        class="form-control"
+        placeholder="Digite o email"
+        value="<%= user.email %>"
+        disabled
+      />
+      <label class="form-label" for="email">Email Atual</label>
+    </div>
+    <div class="form-outline mb-4">
+      <input
+        type="text"
+        name="nemail"
+        id="nemail"
+        class="form-control"
+        placeholder="Digite o novo email"
+      />
+      <label class="form-label" for="nemail">Novo Email</label>
+    </div>
 
-                <div class="form-outline mb-4">
-                    <input type="text" name="profile" id="profile" class="form-control" placeholder="Perfil"
-                        value="<%= textProfile %>" disabled />
-                    <label class="form-label" for="email">Perfil Atual</label>
-                </div>
+    <div class="form-outline mb-4">
+      <input
+        type="text"
+        name="profile"
+        id="profile"
+        class="form-control"
+        placeholder="Perfil"
+        value="<%= textProfile %>"
+        disabled
+      />
+      <label class="form-label" for="email">Perfil Atual</label>
+    </div>
 
-                <div class="form-outline mb-4">
-                    <select class="form-select" aria-label="Escolha o perfil do Usuário" id="nprofile" name="nprofile">
-                        <% switch (user.profile) { case "SP88" : %>
-                            <option value="">Escolha o novo perfil do Usuário</option>
-                            <option value="SP88" selected>Servidor</option>
-                            <option value="PR10">Portaria</option>
-                            <option value="MT18">Mororista</option>
-                            <% break; case "PR10" : %>
-                                <option value="">Escolha o novo perfil do Usuário</option>
-                                <option value="SP88">Servidor</option>
-                                <option value="PR10" selected>Portaria</option>
-                                <option value="MT18">Mororista</option>
-                                <% break; case "MT18" : %>
-                                    <option value="">Escolha o novo perfil do Usuário</option>
-                                    <option value="SP88">Servidor</option>
-                                    <option value="PR10">Portaria</option>
-                                    <option value="MT18" selected>Mororista</option>
-                                    <% break; case "" : %>
-                                        <option value="" selected>Escolha o novo perfil do Usuário</option>
-                                        <option value="SP88">Servidor</option>
-                                        <option value="PR10">Portaria</option>
-                                        <option value="MT18">Mororista</option>
-                                        <% break;} %>
+    <div class="form-outline mb-4">
+      <select
+        class="form-select"
+        aria-label="Escolha o perfil do Usuário"
+        id="nprofile"
+        name="nprofile"
+      >
+        <% switch (user.profile) { case "SP88" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="SP88" selected>Servidor</option>
+        <option value="PR10">Portaria</option>
+        <option value="MT18">Mororista</option>
+        <% break; case "PR10" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="SP88">Servidor</option>
+        <option value="PR10" selected>Portaria</option>
+        <option value="MT18">Mororista</option>
+        <% break; case "MT18" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="SP88">Servidor</option>
+        <option value="PR10">Portaria</option>
+        <option value="MT18" selected>Mororista</option>
+        <% break; default : %>
+        <option value="" selected>Escolha o novo perfil do Usuário</option>
+        <option value="SP88">Servidor</option>
+        <option value="PR10">Portaria</option>
+        <option value="MT18">Mororista</option>
+        <% break;} %>
+      </select>
+      <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
+    </div>
 
-                    </select>
-                    <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
-                </div>
+    <!-- Submit button -->
+    <div class="d-grid gap-2 d-md-block">
+      <button
+        type="submit"
+        onclick="validateUpdate()"
+        class="btn btn-primary mb-4"
+      >
+        Enviar
+      </button>
+    </div>
+  </form>
 
-
-                <!-- Submit button -->
-                <div class="d-grid gap-2 d-md-block">
-                    <button type="submit" onclick="" class="btn btn-primary mb-4">Enviar</button>
-                </div>
-            </form>
-
-            <div class="alert alert-danger box--hidden" role="alert" id="alert" name="alert">
-                <div>É Obrigatório o preenchimento de <strong>pelo menos um dos campos</strong></div>
-            </div>
-        </div>
-        <%- include('../partials/footer.ejs') %>
+  <div
+    class="alert alert-danger box--hidden"
+    role="alert"
+    id="alert"
+    name="alert"
+  >
+    <div>
+      É Obrigatório o preenchimento de <strong>pelo menos um dos campos</strong>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer.ejs') %>
