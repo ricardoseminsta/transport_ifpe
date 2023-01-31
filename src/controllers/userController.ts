@@ -1,8 +1,17 @@
 import { Request, Response } from "express";
 import * as UserService from "../services/userService";
-import JWT from "jsonwebtoken";
+import JWT, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { ProfileType } from "../types/ProfileType";
+import nodemailer from "nodemailer";
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "transportes@afogados.ifpe.edu.br",
+    pass: "2016transp2016",
+  },
+});
 
 export const ping = (req: Request, res: Response) => {
   console.log("ping");
@@ -17,8 +26,6 @@ export const index = (req: Request, res: Response) => {
 export const getLogin = (req: Request, res: Response) => {
   let isLogged = false;
   let decoded = {};
-
-  console.log("COOKIE GETlOGIN: ", req.headers.cookie);
   let cookie = req.headers.cookie?.split("=");
 
   if (cookie) {
@@ -32,7 +39,10 @@ export const getLogin = (req: Request, res: Response) => {
     if (authType === "Bearer") {
       // console.log("TOKEN", token);
       try {
-        decoded = JWT.verify(token, process.env.JWT_SECRET_KEY as string);
+        decoded = JWT.verify(
+          token,
+          process.env.JWT_SECRET_KEY as string
+        ) as JwtPayload;
         console.log("DECODED", decoded);
         isLogged = true;
       } catch (error) {}
@@ -63,8 +73,16 @@ export const login = async (req: Request, res: Response) => {
       // Cookies.set("auth", req.headers.authorization);
       res.cookie("auth", req.headers.authorization);
       // console.log(req.cookies);
+      const mailOptions = {
+        from: "transportes@afogados.ifpe.edu.br", // sender address
+        to: "ricardo.silva@afogados.ifpe.edu.br", // receiver (use array of string for a list)
+        subject: "Email de teste", // Subject line
+        html: "<p>Teste de envio automatico utilizando nodemailer</p>", // plain text body
+      };
+      let mail = await transporter.sendMail(mailOptions);
+      console.log("MAIL: ", mail);
 
-      res.render("pages/index");
+      res.redirect(`/user/${user.id}`);
       return;
     }
   }
@@ -131,7 +149,10 @@ export const update = async (req: Request, res: Response) => {
   const updateUser = UserService.updateUserById(id, email, profile);
 
   if (updateUser instanceof Error) {
-    return res.render("pages/error", { updateUser });
+    return res.render("/error", {
+      message:
+        "ocorreu um erro durante o cadastro, por favor recarregue a pagina!",
+    });
   }
 
   res.redirect("/user/list");

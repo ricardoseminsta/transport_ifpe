@@ -1,17 +1,6 @@
 <%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
 <div class="container col-12 col-xl-4">
-  <h1 class="text-center">Página de Perfil</h1>
-
-  <h2 class="my-4">Informações do Usuario <%= user.email %></h2>
-  <div class="mb-4">
-    <div class="mb-2"><strong>Email:</strong> <%= user.email %></div>
-    <div>
-      <strong>Perfil:</strong> <% switch (user.profile) { case "SP88" : %>
-      Servidor <% break; case "PR10" : %> Portaria <% break; case "MT18" : %>
-      Mororista <% break; case "SU01" : %> Super User <% break; default : %> Não
-      encontrado ou não definido <% break;} %>
-    </div>
-  </div>
+  <h1>Usuario <%= user.email %></h1>
   <form method="post" action="/user" id="update-user">
     <div class="form-outline mb-4">
       <input
