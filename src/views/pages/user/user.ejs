@@ -2,15 +2,10 @@
 <div class="container col-12 col-xl-4">
   <h1 class="text-center">Página de Perfil</h1>
 
-  <h2 class="my-4">Informações do Usuario <%= user.email %></h2>
+  <h2 class="my-4">Informações do Usuario <%= email %></h2>
   <div class="mb-4">
-    <div class="mb-2"><strong>Email:</strong> <%= user.email %></div>
-    <div>
-      <strong>Perfil:</strong> <% switch (user.profile) { case "SP88" : %>
-      Servidor <% break; case "PR10" : %> Portaria <% break; case "MT18" : %>
-      Mororista <% break; case "SU01" : %> Super User <% break; default : %> Não
-      encontrado ou não definido <% break;} %>
-    </div>
+    <div class="mb-2"><strong>Email:</strong> <%= email %></div>
+    <div><strong>Perfil:</strong> <%= profile %></div>
   </div>
   <form method="post" action="/user" id="update-user">
     <div class="form-outline mb-4">
@@ -19,7 +14,7 @@
         name="id"
         id="id"
         class="form-control"
-        value="<%= user.id %>"
+        value="<%= id %>"
       />
       <input
         type="text"
@@ -27,7 +22,7 @@
         id="email"
         class="form-control"
         placeholder="Digite o email"
-        value="<%= user.email %>"
+        value="<%= email %>"
         disabled
       />
       <label class="form-label" for="email">Email Atual</label>
@@ -50,7 +45,7 @@
         id="profile"
         class="form-control"
         placeholder="Perfil"
-        value="<%= textProfile %>"
+        value="<%= profile %>"
         disabled
       />
       <label class="form-label" for="email">Perfil Atual</label>
@@ -63,26 +58,36 @@
         id="nprofile"
         name="nprofile"
       >
-        <% switch (user.profile) { case "SP88" : %>
+        <% switch (profile) { case 2001 : %>
         <option value="">Escolha o novo perfil do Usuário</option>
-        <option value="SP88" selected>Servidor</option>
-        <option value="PR10">Portaria</option>
-        <option value="MT18">Mororista</option>
-        <% break; case "PR10" : %>
+        <option value="2001" selected>Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001">Mororista</option>
+        <% break; case "2002" : %>
         <option value="">Escolha o novo perfil do Usuário</option>
-        <option value="SP88">Servidor</option>
-        <option value="PR10" selected>Portaria</option>
-        <option value="MT18">Mororista</option>
-        <% break; case "MT18" : %>
+        <option value="2001">Gestor</option>
+        <option value="2002" selected>Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001">Mororista</option>
+        <% break; case "3001" : %>
         <option value="">Escolha o novo perfil do Usuário</option>
-        <option value="SP88">Servidor</option>
-        <option value="PR10">Portaria</option>
-        <option value="MT18" selected>Mororista</option>
+        <option value="2001">Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001" selected>Portaria</option>
+        <option value="4001">Mororista</option>
+        <% break; case "4001" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="2001">Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001" selected>Mororista</option>
         <% break; default : %>
-        <option value="" selected>Escolha o novo perfil do Usuário</option>
-        <option value="SP88">Servidor</option>
-        <option value="PR10">Portaria</option>
-        <option value="MT18">Mororista</option>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="2001">Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001" selected>Mororista</option>
         <% break;} %>
       </select>
       <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>

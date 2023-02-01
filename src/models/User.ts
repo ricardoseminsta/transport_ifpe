@@ -7,7 +7,7 @@ export interface UserInstance extends Model {
   id: number;
   email: string;
   password: string;
-  profile: "SU01" | "SP88" | "PR10" | "MT18" | string;
+  profile: 1001 | 2001 | 2002 | 3001 | 4001;
   active: boolean;
 }
 
@@ -29,7 +29,7 @@ export const User = sequelize.define<UserInstance>(
       allowNull: false,
     },
     profile: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     active: {
@@ -49,31 +49,31 @@ async () => {
   await User.create({
     email: "ricardo",
     password: bcrypt.hashSync("123", 10),
-    profile: "SU01",
+    profile: 1001,
   });
   await User.create({
     email: "joana",
     password: bcrypt.hashSync("123", 10),
-    profile: "SP88",
+    profile: 2002,
   });
   await User.create({
     email: "joao",
     password: bcrypt.hashSync("123", 10),
-    profile: "PR10",
+    profile: 3001,
   });
   await User.create({
     email: "daniel",
     password: bcrypt.hashSync("123", 10),
-    profile: "PR10",
+    profile: 3001,
   });
   await User.create({
     email: "danilo",
     password: bcrypt.hashSync("123", 10),
-    profile: "MT18",
+    profile: 4001,
   });
   await User.create({
     email: "james",
     password: bcrypt.hashSync("123", 10),
-    profile: "MT18",
+    profile: 4001,
   });
 };

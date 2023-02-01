@@ -1,4 +1,4 @@
-import { User } from "../models/User";
+import { User, UserInstance } from "../models/User";
 import bcrypt from "bcrypt";
 import JWT, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -57,9 +57,17 @@ export const updateUserById = async (
 };
 
 export const getProfile = async (id: number) => {
+  let profile = {
+    1001: "Super Usuário",
+    2001: "Gestor",
+    2002: "Servidor",
+    3001: "Portaria",
+    4001: "Motorista",
+  };
   const user = await User.findByPk(id);
+
   if (user) {
-    return user.profile;
+    return profile[user.profile];
   }
 };
 

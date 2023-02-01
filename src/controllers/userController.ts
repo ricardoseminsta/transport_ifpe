@@ -1,17 +1,9 @@
 import { Request, Response } from "express";
 import * as UserService from "../services/userService";
+import * as MailService from "../services/mailService";
 import JWT, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { ProfileType } from "../types/ProfileType";
-import nodemailer from "nodemailer";
-
-let transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "transportes@afogados.ifpe.edu.br",
-    pass: "2016transp2016",
-  },
-});
 
 export const ping = (req: Request, res: Response) => {
   console.log("ping");
@@ -73,15 +65,6 @@ export const login = async (req: Request, res: Response) => {
       // Cookies.set("auth", req.headers.authorization);
       res.cookie("auth", req.headers.authorization);
       // console.log(req.cookies);
-      const mailOptions = {
-        from: "transportes@afogados.ifpe.edu.br", // sender address
-        to: "ricardo.silva@afogados.ifpe.edu.br", // receiver (use array of string for a list)
-        subject: "Email de teste", // Subject line
-        html: "<p>Teste de envio automatico utilizando nodemailer</p>", // plain text body
-      };
-      let mail = await transporter.sendMail(mailOptions);
-      console.log("MAIL: ", mail);
-
       res.redirect(`/user/${user.id}`);
       return;
     }
@@ -119,26 +102,48 @@ export const register = async (req: Request, res: Response) => {
   res.redirect("/register");
 };
 
+export const user = async (req: Request, res: Response) => {
+  const id: number = parseInt(req.params.id);
+  let decodedUser = await UserService.decodedUser(
+    req.headers.authorization as string
+  );
+
+  if (decodedUser) {
+    if (decodedUser.id === id) {
+      const id = decodedUser.id;
+      const email = decodedUser.email;
+      const profile = await UserService.getProfile(decodedUser.id);
+      return res.render("pages/user/user", { id, email, profile });
+    }
+    return res.render("pages/error", {
+      message: "O seu usuário não tem acesso a essa página",
+    });
+  }
+  return res.render("pages/error", {
+    message: "Usuario Inexistente",
+  });
+};
+
 export const getUpdate = async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
-  const user = await UserService.findById(id);
+  let decodedUser = await UserService.decodedUser(
+    req.headers.authorization as string
+  );
 
-  let textProfile = "";
-  if (user) {
-    switch (user.profile as string) {
-      case "SP88":
-        textProfile = "Servidor";
-        break;
-      case "PR10":
-        textProfile = "Portaria";
-        break;
-      case "MT18":
-        textProfile = "Motorista";
-        break;
+  if (decodedUser) {
+    if (decodedUser.id === id) {
+      const id = decodedUser.id;
+      const email = decodedUser.email;
+      const profile = await UserService.getProfile(decodedUser.id);
+      return res.render("pages/user/user", { id, email, profile });
     }
+    return res.render("pages/error", {
+      message: "O seu usuário não tem acesso a essa página",
+    });
   }
-
-  res.render("pages/user/user", { user, textProfile });
+  return res.render("pages/error", {
+    message: "Usuario Inexistente",
+  });
 };
 
 export const update = async (req: Request, res: Response) => {
