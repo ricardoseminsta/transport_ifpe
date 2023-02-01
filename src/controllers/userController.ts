@@ -3,7 +3,6 @@ import * as UserService from "../services/userService";
 import * as MailService from "../services/mailService";
 import JWT, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { ProfileType } from "../types/ProfileType";
 
 export const ping = (req: Request, res: Response) => {
   console.log("ping");
@@ -115,9 +114,7 @@ export const user = async (req: Request, res: Response) => {
       const profile = await UserService.getProfile(decodedUser.id);
       return res.render("pages/user/user", { id, email, profile });
     }
-    return res.render("pages/error", {
-      message: "O seu usuário não tem acesso a essa página",
-    });
+    return res.redirect(`/user/${decodedUser.id}`);
   }
   return res.render("pages/error", {
     message: "Usuario Inexistente",
@@ -135,11 +132,9 @@ export const getUpdate = async (req: Request, res: Response) => {
       const id = decodedUser.id;
       const email = decodedUser.email;
       const profile = await UserService.getProfile(decodedUser.id);
-      return res.render("pages/user/user", { id, email, profile });
+      return res.render("pages/user/update", { id, email, profile });
     }
-    return res.render("pages/error", {
-      message: "O seu usuário não tem acesso a essa página",
-    });
+    return res.redirect(`/user/update/${decodedUser.id}`);
   }
   return res.render("pages/error", {
     message: "Usuario Inexistente",
@@ -152,6 +147,13 @@ export const update = async (req: Request, res: Response) => {
   let profile = req.body.nprofile as string;
 
   const updateUser = UserService.updateUserById(id, email, profile);
+  const token = JWT.sign(
+    { id, email, profile },
+    process.env.JWT_SECRET_KEY as string,
+    { expiresIn: "12h" }
+  );
+  req.headers.authorization = "Bearer " + token;
+  res.cookie("auth", req.headers.authorization);
 
   if (updateUser instanceof Error) {
     return res.render("/error", {
@@ -160,7 +162,7 @@ export const update = async (req: Request, res: Response) => {
     });
   }
 
-  res.redirect("/user/list");
+  res.redirect(`/user/${id}`);
 };
 
 export const list = async (req: Request, res: Response) => {

@@ -63,14 +63,20 @@ function validateUpdate() {
     } else {
       let textProfile = "";
       switch (profile.value) {
-        case "SP88":
+        case "2001":
+          textProfile = "Gestor";
+          break;
+        case "2002":
           textProfile = "Servidor";
           break;
-        case "PR10":
+        case "3001":
           textProfile = "Portaria";
           break;
-        case "MT18":
+        case "4001":
           textProfile = "Motorista";
+          break;
+        default:
+          textProfile = "Secret";
           break;
       }
 

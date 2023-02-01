@@ -47,7 +47,7 @@ export const User = sequelize.define<UserInstance>(
 async () => {
   await sequelize.sync({ force: true });
   await User.create({
-    email: "ricardo",
+    email: "ricardo.silva@afogados.ifpe.edu.br",
     password: bcrypt.hashSync("123", 10),
     profile: 1001,
   });
