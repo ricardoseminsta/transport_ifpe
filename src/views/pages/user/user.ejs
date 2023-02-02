@@ -1,18 +1,26 @@
 <%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
-    <div class="container col-12 col-xl-4">
-      <h1 class="text-center">Página de Perfil</h1>
+<div class="container col-12 col-xl-4">
+  <h1 class="text-center">Página de Perfil</h1>
 
-      <h2 class="my-4">Informações do Usuario <%= email %>
-      </h2>
-      <div class="mb-4">
-        <div class="mb-2"><strong>Email:</strong>
-          <%= email %>
-        </div>
-        <div><strong>Perfil:</strong>
-          <%= profile %>
-        </div>
-      </div>
-      <a href="/user/update/<%= id %>">Editar Informações</a>
+  <h2 class="my-4">Informações do Usuario <%= email %></h2>
+  <div class="mb-4">
+    <div class="mb-2">
+      <strong>Email:</strong>
+      <%= email %>
     </div>
+    <div>
+      <strong>Perfil:</strong>
+      <%= profile %>
+    </div>
+  </div>
+  <div class="d-flex justify-content-around">
+    <a class="btn btn-secondary" href="/user/update/<%= id %>"
+      >Editar Informações</a
+    >
+    <% if (decodedUser.profile==1001) { %>
+    <a class="btn btn-secondary" href="/user/list">Lista de Usuários</a>
+    <% } %>
+  </div>
+</div>
 
-    <%- include('../partials/footer.ejs') %>
+<%- include('../partials/footer.ejs') %>

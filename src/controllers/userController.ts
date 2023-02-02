@@ -103,6 +103,7 @@ export const register = async (req: Request, res: Response) => {
 
 export const user = async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
+  const user = await UserService.findById(id);
   let decodedUser = await UserService.decodedUser(
     req.headers.authorization as string
   );
@@ -112,7 +113,15 @@ export const user = async (req: Request, res: Response) => {
       const id = decodedUser.id;
       const email = decodedUser.email;
       const profile = await UserService.getProfile(decodedUser.id);
-      return res.render("pages/user/user", { id, email, profile });
+      return res.render("pages/user/user", { id, email, profile, decodedUser });
+    }
+
+    if (decodedUser.profile === 1001 && user) {
+      let id = user.id;
+      let email = user.email;
+      let profile = await UserService.getProfile(user.id);
+      console.log("SUPER USER");
+      return res.render(`pages/user/user`, { id, email, profile, decodedUser });
     }
     return res.redirect(`/user/${decodedUser.id}`);
   }
@@ -123,17 +132,27 @@ export const user = async (req: Request, res: Response) => {
 
 export const getUpdate = async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
+  const user = await UserService.findById(id);
   let decodedUser = await UserService.decodedUser(
     req.headers.authorization as string
   );
 
   if (decodedUser) {
     if (decodedUser.id === id) {
-      const id = decodedUser.id;
-      const email = decodedUser.email;
-      const profile = await UserService.getProfile(decodedUser.id);
+      let id = decodedUser.id;
+      let email = decodedUser.email;
+      let profile = await UserService.getProfile(decodedUser.id);
       return res.render("pages/user/update", { id, email, profile });
     }
+
+    if (decodedUser.profile === 1001 && user) {
+      let id = user.id;
+      let email = user.email;
+      let profile = await UserService.getProfile(user.id);
+      console.log("SUPER USER");
+      return res.render(`pages/user/update`, { id, email, profile });
+    }
+
     return res.redirect(`/user/update/${decodedUser.id}`);
   }
   return res.render("pages/error", {
@@ -171,7 +190,7 @@ export const list = async (req: Request, res: Response) => {
   );
 
   if (decodedUser) {
-    if (decodedUser.profile == "SU01") {
+    if (decodedUser.profile == 1001) {
       let users = await UserService.allActive();
       let list: string[] = [];
 

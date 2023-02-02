@@ -90,6 +90,10 @@ function validateUpdate() {
 }
 function deleteUserForm() {
   let deleteUser = document.getElementById("delete-user");
-  deleteUser.preventDefault();
-  console.log("javascript console");
+  deleteUser.addEventListener("submit", (e) => {
+    e.preventDefault();
+    confirm("Deletar Usuário?") == true
+      ? deleteUser.submit()
+      : window.location.reload();
+  });
 }
