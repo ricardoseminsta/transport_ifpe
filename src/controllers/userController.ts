@@ -101,8 +101,17 @@ export const register = async (req: Request, res: Response) => {
   res.redirect("/register");
 };
 
+export const redUser = async (req: Request, res: Response) => {
+  let decodedUser = await UserService.decodedUser(
+    req.headers.authorization as string
+  );
+  if (decodedUser) {
+    return res.redirect(`user/${decodedUser.id}`);
+  }
+};
+
 export const user = async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id);
+  let id: number = parseInt(req.params.id);
   const user = await UserService.findById(id);
   let decodedUser = await UserService.decodedUser(
     req.headers.authorization as string
@@ -163,25 +172,34 @@ export const getUpdate = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   let id = parseInt(req.body.id);
   let email = req.body.nemail as string;
-  let profile = req.body.nprofile as string;
+  let profile = parseInt(req.body.nprofile);
 
-  const updateUser = UserService.updateUserById(id, email, profile);
-  const token = JWT.sign(
-    { id, email, profile },
-    process.env.JWT_SECRET_KEY as string,
-    { expiresIn: "12h" }
+  let decodedUser = await UserService.decodedUser(
+    req.headers.authorization as string
   );
-  req.headers.authorization = "Bearer " + token;
-  res.cookie("auth", req.headers.authorization);
+  if (decodedUser) {
+    if (decodedUser.profile !== 1001 || decodedUser.id === id) {
+      const updateUser = await UserService.updateUserById(id, email, profile);
+      const token = JWT.sign(
+        { id, email, profile },
+        process.env.JWT_SECRET_KEY as string,
+        { expiresIn: "12h" }
+      );
+      req.headers.authorization = "Bearer " + token;
+      res.cookie("auth", req.headers.authorization);
 
-  if (updateUser instanceof Error) {
-    return res.render("/error", {
-      message:
-        "ocorreu um erro durante o cadastro, por favor recarregue a pagina!",
-    });
+      if (updateUser instanceof Error) {
+        return res.render("/error", {
+          message:
+            "ocorreu um erro durante o cadastro, por favor recarregue a pagina!",
+        });
+      }
+
+      return res.redirect(`/user/${id}`);
+    }
+    await UserService.updateUserById(id, email, profile);
+    return res.redirect(`/user/list`);
   }
-
-  res.redirect(`/user/${id}`);
 };
 
 export const list = async (req: Request, res: Response) => {

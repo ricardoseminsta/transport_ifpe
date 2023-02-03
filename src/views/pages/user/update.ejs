@@ -1,74 +1,113 @@
 <%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
-    <div class="container col-12 col-xl-4">
-      <h1>Usuario <%= email %>
-      </h1>
-      <form method="post" action="/user" id="update-user">
-        <div class="form-outline mb-4">
-          <input type="hidden" name="id" id="id" class="form-control" value="<%= id %>" />
-          <input type="text" name="email" id="email" class="form-control" placeholder="Digite o email"
-            value="<%= email %>" disabled />
-          <label class="form-label" for="email">Email Atual</label>
-        </div>
-        <div class="form-outline mb-4">
-          <input type="text" name="nemail" id="nemail" class="form-control" placeholder="Digite o novo email" />
-          <label class="form-label" for="nemail">Novo Email</label>
-        </div>
-
-        <div class="form-outline mb-4">
-          <input type="text" name="profile" id="profile" class="form-control" placeholder="Perfil"
-            value="<%= profile %>" disabled />
-          <label class="form-label" for="email">Perfil Atual</label>
-        </div>
-
-        <div class="form-outline mb-4">
-          <select class="form-select" aria-label="Escolha o perfil do Usuário" id="nprofile" name="nprofile">
-            <% switch (profile) { case "Gestor" : %>
-              <option value="">Escolha o novo perfil do Usuário</option>
-              <option value="2001" selected>Gestor</option>
-              <option value="2002">Servidor</option>
-              <option value="3001">Portaria</option>
-              <option value="4001">Motorista</option>
-              <% break; case "Servidor" : %>
-                <option value="">Escolha o novo perfil do Usuário</option>
-                <option value="2001">Gestor</option>
-                <option value="2002" selected>Servidor</option>
-                <option value="3001">Portaria</option>
-                <option value="4001">Motorista</option>
-                <% break; case "Portaria" : %>
-                  <option value="">Escolha o novo perfil do Usuário</option>
-                  <option value="2001">Gestor</option>
-                  <option value="2002">Servidor</option>
-                  <option value="3001" selected>Portaria</option>
-                  <option value="4001">Motorista</option>
-                  <% break; case "Motorista" : %>
-                    <option value="">Escolha o novo perfil do Usuário</option>
-                    <option value="2001">Gestor</option>
-                    <option value="2002">Servidor</option>
-                    <option value="3001">Portaria</option>
-                    <option value="4001" selected>Motorista</option>
-                    <% break; default : %>
-                      <option value="" selected>Escolha o novo perfil do Usuário</option>
-                      <option value="2001">Gestor</option>
-                      <option value="2002">Servidor</option>
-                      <option value="3001">Portaria</option>
-                      <option value="4001">Motorista</option>
-                      <% break;} %>
-          </select>
-          <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
-        </div>
-
-        <!-- Submit button -->
-        <div class="d-grid gap-2 d-md-block">
-          <button type="submit" onclick="validateUpdate()" class="btn btn-primary mb-4">
-            Enviar
-          </button>
-        </div>
-      </form>
-
-      <div class="alert alert-danger box--hidden" role="alert" id="alert" name="alert">
-        <div>
-          É Obrigatório o preenchimento de <strong>pelo menos um dos campos</strong>
-        </div>
-      </div>
+<div class="container col-12 col-xl-4">
+  <h1>Usuario <%= email %></h1>
+  <form method="post" action="/user" id="update-user">
+    <div class="form-outline mb-4">
+      <input
+        type="hidden"
+        name="id"
+        id="id"
+        class="form-control"
+        value="<%= id %>"
+      />
+      <input
+        type="text"
+        name="email"
+        id="email"
+        class="form-control"
+        placeholder="Digite o email"
+        value="<%= email %>"
+        disabled
+      />
+      <label class="form-label" for="email">Email Atual</label>
     </div>
-    <%- include('../partials/footer.ejs') %>
+    <div class="form-outline mb-4">
+      <input
+        type="text"
+        name="nemail"
+        id="nemail"
+        class="form-control"
+        placeholder="Digite o novo email"
+      />
+      <label class="form-label" for="nemail">Novo Email</label>
+    </div>
+
+    <div class="form-outline mb-4">
+      <input
+        type="text"
+        name="profile"
+        id="profile"
+        class="form-control"
+        placeholder="Perfil"
+        value="<%= profile %>"
+        disabled
+      />
+      <label class="form-label" for="email">Perfil Atual</label>
+    </div>
+
+    <div class="form-outline mb-4">
+      <select
+        class="form-select"
+        aria-label="Escolha o perfil do Usuário"
+        id="nprofile"
+        name="nprofile"
+      >
+        <% switch (profile) { case "Gestor" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="2001" selected>Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001">Motorista</option>
+        <% break; case "Servidor" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="2001">Gestor</option>
+        <option value="2002" selected>Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001">Motorista</option>
+        <% break; case "Portaria" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="2001">Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001" selected>Portaria</option>
+        <option value="4001">Motorista</option>
+        <% break; case "Motorista" : %>
+        <option value="">Escolha o novo perfil do Usuário</option>
+        <option value="2001">Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001" selected>Motorista</option>
+        <% break; default : %>
+        <option value="1001" selected>Escolha o novo perfil do Usuário</option>
+        <option value="2001">Gestor</option>
+        <option value="2002">Servidor</option>
+        <option value="3001">Portaria</option>
+        <option value="4001">Motorista</option>
+        <% break;} %>
+      </select>
+      <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
+    </div>
+
+    <!-- Submit button -->
+    <div class="d-grid gap-2 d-md-block">
+      <button
+        type="submit"
+        onclick="validateUpdate()"
+        class="btn btn-primary mb-4"
+      >
+        Enviar
+      </button>
+    </div>
+  </form>
+
+  <div
+    class="alert alert-danger box--hidden"
+    role="alert"
+    id="alert"
+    name="alert"
+  >
+    <div>
+      É Obrigatório o preenchimento de <strong>pelo menos um dos campos</strong>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer.ejs') %>

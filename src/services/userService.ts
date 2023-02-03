@@ -35,13 +35,13 @@ export const matchPassword = (passwordText: string, encrypted: string) => {
 };
 
 export const allActive = async () => {
-  return await User.findAll({ where: { active: true } });
+  return await User.findAll({ where: { active: true }, order: ["email"] });
 };
 
 export const updateUserById = async (
   id: number,
   email?: string,
-  profile?: string
+  profile?: number
 ) => {
   const user = await User.findOne({ where: { id } });
   if (user) {
