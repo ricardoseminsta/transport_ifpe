@@ -213,11 +213,12 @@ export const list = async (req: Request, res: Response) => {
       let list: string[] = [];
 
       for (let i in users) {
-        list.push(users[i].email);
+        let profile = (await UserService.getProfile(users[i].id)) as string;
+        list.push(profile);
       }
-      console.log(users[0].email);
+      console.log(list);
 
-      return res.render("pages/user/list", { users });
+      return res.render("pages/user/list", { users, list });
     }
   }
   return res.render("pages/error", {
