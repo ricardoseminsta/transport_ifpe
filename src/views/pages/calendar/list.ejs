@@ -1,0 +1,41 @@
+<%- include('../partials/head.ejs') %> <%- include('../partials/header.ejs') %>
+    <div class="container col-12 col-xl-4 text-center">
+      <h1>Viagens Agendadas</h1>
+      <h2>Não existem viagens agendadas</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col" class="d-none d-md-table-cell">Perfil</th>
+            <th scope="col">Ação</th>
+          </tr>
+        </thead>
+        <tbody class="align-middle">
+          <tr>
+            <td scope="row">
+
+            </td>
+            <td>
+
+            </td>
+            <td class="d-none d-md-table-cell">
+
+            </td>
+            <td>
+              <div class="d-flex flex-column flex-lg-row justify-content-center">
+                <a href="" class="btn btn-primary d-inline mx-lg-2">Editar</a>
+                <form method="post" action="/user/delete" id="delete-user" class="d-flex flex-column">
+                  <input type="hidden" id="id" name="id" value="" />
+                  <button type="submit" onclick="" class="btn btn-danger mt-lg-0 mt-3 mt-lg-0">
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <%- include('../partials/footer.ejs') %>

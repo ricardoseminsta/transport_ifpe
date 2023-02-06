@@ -3,6 +3,7 @@ import path from "path";
 import dotenv from "dotenv";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
+import calendarRoutes from "./routes/calendarRoutes";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -20,6 +21,7 @@ server.use(express.urlencoded({ extended: true }));
 server.get("/ping", (req: Request, res: Response) => res.json({ pong: true }));
 
 server.use(userRoutes);
+server.use(calendarRoutes);
 server.use(cookieParser());
 
 server.use((req: Request, res: Response) => {
