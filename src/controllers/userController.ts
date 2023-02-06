@@ -112,6 +112,8 @@ export const redUser = async (req: Request, res: Response) => {
 
 export const user = async (req: Request, res: Response) => {
   let id: number = parseInt(req.params.id);
+  if (isNaN(id)) return res.render("pages/error", { message: "URL inválida" });
+
   const user = await UserService.findById(id);
   let decodedUser = await UserService.decodedUser(
     req.headers.authorization as string
@@ -141,6 +143,7 @@ export const user = async (req: Request, res: Response) => {
 
 export const getUpdate = async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
+  if (isNaN(id)) return res.render("pages/error", { message: "URL inválida" });
   const user = await UserService.findById(id);
   let decodedUser = await UserService.decodedUser(
     req.headers.authorization as string
