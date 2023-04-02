@@ -16,28 +16,14 @@ export const index = (req: Request, res: Response) => {
 
 export const getLogin = (req: Request, res: Response) => {
   let isLogged = false;
-  let decoded = {};
   let cookie = req.headers.cookie?.split("=");
+  let decoded = [] as JwtPayload;
 
   if (cookie) {
-    if (cookie[0] === "auth") {
-      cookie[1] = decodeURI(cookie[1]);
-      req.headers.authorization = cookie[1];
-    }
-  }
-  if (req.headers.authorization) {
-    const [authType, token] = req.headers.authorization.split(" ");
-    if (authType === "Bearer") {
-      // console.log("TOKEN", token);
-      try {
-        decoded = JWT.verify(
-          token,
-          process.env.JWT_SECRET_KEY as string
-        ) as JwtPayload;
-        console.log("DECODED", decoded);
-        isLogged = true;
-      } catch (error) {}
-    }
+    let decoded = UserService.decodedUser(cookie[1]);
+    console.log(decoded);
+    isLogged = true;
+    res.render("pages/user/login", { isLogged, decoded });
   }
 
   // console.log(req.headers.authorization);
