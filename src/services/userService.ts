@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 export const createUser = async (
   email: string,
+  name: string,
   password: string,
   profile: string
 ) => {
@@ -13,6 +14,7 @@ export const createUser = async (
     const hash = bcrypt.hashSync(password, 10);
     const newUser = await User.create({
       email: email.toLocaleLowerCase(),
+      name,
       password: hash,
       profile,
     });
@@ -40,6 +42,7 @@ export const allActive = async () => {
 
 export const updateUserById = async (
   id: number,
+  name: string,
   email?: string,
   profile?: number
 ) => {
@@ -47,6 +50,7 @@ export const updateUserById = async (
   if (user) {
     user.set({
       email: email?.toLocaleLowerCase(),
+      name,
       profile,
     });
     await user.save();

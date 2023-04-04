@@ -66,9 +66,14 @@ export const register = async (req: Request, res: Response) => {
   res.clearCookie("connect.sid");
   res.clearCookie("auth");
   if (req.body.email && req.body.password && req.body.profile) {
-    let { email, password, profile } = req.body;
+    let { email, password, name, profile } = req.body;
 
-    const newUser = await UserService.createUser(email, password, profile);
+    const newUser = await UserService.createUser(
+      email,
+      name,
+      password,
+      profile
+    );
     if (newUser instanceof Error) {
       return res.render("pages/error", { newUser });
     } else {
@@ -161,6 +166,7 @@ export const getUpdate = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   let id = parseInt(req.body.id);
   let email = req.body.nemail as string;
+  let name = req.body.name as string;
   let profile = parseInt(req.body.nprofile);
 
   let decodedUser = await UserService.decodedUser(
@@ -168,7 +174,12 @@ export const update = async (req: Request, res: Response) => {
   );
   if (decodedUser) {
     if (decodedUser.profile !== 1001 || decodedUser.id === id) {
-      const updateUser = await UserService.updateUserById(id, email, profile);
+      const updateUser = await UserService.updateUserById(
+        id,
+        email,
+        name,
+        profile
+      );
       const token = JWT.sign(
         { id, email, profile },
         process.env.JWT_SECRET_KEY as string,
@@ -186,7 +197,7 @@ export const update = async (req: Request, res: Response) => {
 
       return res.redirect(`/user/${id}`);
     }
-    await UserService.updateUserById(id, email, profile);
+    await UserService.updateUserById(id, email, name, profile);
     return res.redirect(`/user/list`);
   }
 };
