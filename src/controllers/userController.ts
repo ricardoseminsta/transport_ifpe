@@ -14,13 +14,13 @@ export const index = (req: Request, res: Response) => {
   res.render("pages/index");
 };
 
-export const getLogin = (req: Request, res: Response) => {
+export const getLogin = async (req: Request, res: Response) => {
   let isLogged = false;
   let cookie = req.headers.cookie?.split("=");
   let decoded = [] as JwtPayload;
 
   if (cookie) {
-    let decoded = UserService.decodedUser(cookie[1]);
+    let decoded = await UserService.decodedUser(cookie[1]);
     console.log(decoded);
     isLogged = true;
     res.render("pages/user/login", { isLogged, decoded });
@@ -92,7 +92,7 @@ export const register = async (req: Request, res: Response) => {
   res.redirect("/register");
 };
 
-export const redUser = async (req: Request, res: Response) => {
+export const redirectUser = async (req: Request, res: Response) => {
   let decodedUser = await UserService.decodedUser(
     req.headers.authorization as string
   );
