@@ -144,8 +144,9 @@ export const getUpdate = async (req: Request, res: Response) => {
     if (decodedUser.id === id) {
       let id = decodedUser.id;
       let email = decodedUser.email;
+      let name = decodedUser.name;
       let profile = await UserService.getProfile(decodedUser.id);
-      return res.render("pages/user/update", { id, email, profile });
+      return res.render("pages/user/update", { id, email, profile, name });
     }
 
     if (decodedUser.profile === 1001 && user) {
