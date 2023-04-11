@@ -151,9 +151,10 @@ export const getUpdate = async (req: Request, res: Response) => {
     if (decodedUser.profile === 1001 && user) {
       let id = user.id;
       let email = user.email;
+      let name = user.name;
       let profile = await UserService.getProfile(user.id);
       console.log("SUPER USER");
-      return res.render(`pages/user/update`, { id, email, profile });
+      return res.render(`pages/user/update`, { id, email, profile, name });
     }
 
     return res.redirect(`/user/update/${decodedUser.id}`);
@@ -166,7 +167,7 @@ export const getUpdate = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   let id = parseInt(req.body.id);
   let email = req.body.nemail as string;
-  let name = req.body.name as string;
+  let name = req.body.nname as string;
   let profile = parseInt(req.body.nprofile);
 
   let decodedUser = await UserService.decodedUser(
@@ -197,7 +198,8 @@ export const update = async (req: Request, res: Response) => {
 
       return res.redirect(`/user/${id}`);
     }
-    await UserService.updateUserById(id, email, name, profile);
+    await UserService.updateUserById(id, name, email, profile);
+    // console.log("USER contoller USER", id, email, name, profile);
     return res.redirect(`/user/list`);
   }
 };

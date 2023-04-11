@@ -43,13 +43,13 @@ export const allActive = async () => {
 export const updateUserById = async (
   id: number,
   name: string,
-  email?: string,
-  profile?: number
+  email: string,
+  profile: number
 ) => {
   const user = await User.findOne({ where: { id } });
   if (user) {
     user.set({
-      email: email?.toLocaleLowerCase(),
+      email: email.toLocaleLowerCase(),
       name,
       profile,
     });

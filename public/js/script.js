@@ -19,16 +19,22 @@ function validateRegister() {
         alert.classList.add("box--hidden");
       }, 1800);
     } else {
-      let texProfile = "";
+      let textProfile = "";
       switch (profile.value) {
-        case "SP88":
-          texProfile = "Servidor";
+        case "2001":
+          textProfile = "Gestor";
           break;
-        case "PR10":
-          texProfile = "Portaria";
+        case "2002":
+          textProfile = "Servidor";
           break;
-        case "MT18":
-          texProfile = "Motorista";
+        case "3001":
+          textProfile = "Portaria";
+          break;
+        case "4001":
+          textProfile = "Motorista";
+          break;
+        default:
+          textProfile = "Secret";
           break;
       }
 

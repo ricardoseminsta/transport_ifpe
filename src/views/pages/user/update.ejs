@@ -10,6 +10,7 @@
         class="form-control"
         value="<%= id %>"
       />
+      <label class="form-label" for="email">Email Atual</label>
       <input
         type="text"
         name="email"
@@ -19,9 +20,9 @@
         value="<%= email %>"
         disabled
       />
-      <label class="form-label" for="email">Email Atual</label>
     </div>
     <div class="form-outline mb-4">
+      <label class="form-label" for="nemail">Novo Email</label>
       <input
         type="text"
         name="nemail"
@@ -29,10 +30,32 @@
         class="form-control"
         placeholder="Digite o novo email"
       />
-      <label class="form-label" for="nemail">Novo Email</label>
     </div>
 
     <div class="form-outline mb-4">
+      <label class="form-label" for="name">Nome Atual</label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="form-control"
+        placeholder="Digite o novo email"
+        value="<%= name %>"
+        disabled
+      />
+    </div>
+    <div class="form-outline mb-4">
+      <label class="form-label" for="nname">Novo Nome</label>
+      <input
+        type="text"
+        name="nname"
+        id="nname"
+        class="form-control"
+        placeholder="Digite o novo nome"
+      />
+    </div>
+    <div class="form-outline mb-4">
+      <label class="form-label" for="email">Perfil Atual</label>
       <input
         type="text"
         name="profile"
@@ -42,10 +65,10 @@
         value="<%= profile %>"
         disabled
       />
-      <label class="form-label" for="email">Perfil Atual</label>
     </div>
 
     <div class="form-outline mb-4">
+      <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
       <select
         class="form-select"
         aria-label="Escolha o perfil do Usuário"
@@ -84,7 +107,6 @@
         <option value="4001">Motorista</option>
         <% break;} %>
       </select>
-      <label class="form-label" for="nprofile">Novo Prefil de Usuário</label>
     </div>
 
     <!-- Submit button -->
