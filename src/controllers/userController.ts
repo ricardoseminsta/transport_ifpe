@@ -42,8 +42,7 @@ export const login = async (req: Request, res: Response) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = JWT.sign(
         { id: user.id, email: user.email, profile: user.profile },
-        process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "12h" }
+        process.env.JWT_SECRET_KEY as string
       );
       req.headers.authorization = "Bearer " + token;
       // console.log("token do form: ", req.headers.authorization);
@@ -80,8 +79,7 @@ export const register = async (req: Request, res: Response) => {
       res.status(201);
       const token = JWT.sign(
         { id: newUser.id, email: newUser.email },
-        process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "12h" }
+        process.env.JWT_SECRET_KEY as string
       );
       req.headers.authorization = "Bearer " + token;
       res.cookie("auth", req.headers.authorization);
@@ -184,8 +182,7 @@ export const update = async (req: Request, res: Response) => {
       );
       const token = JWT.sign(
         { id, email, profile },
-        process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "12h" }
+        process.env.JWT_SECRET_KEY as string
       );
       req.headers.authorization = "Bearer " + token;
       res.cookie("auth", req.headers.authorization);
