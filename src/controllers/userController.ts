@@ -3,6 +3,7 @@ import * as UserService from "../services/userService";
 import * as MailService from "../services/mailService";
 import JWT, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import validator from "validator";
 
 export const ping = (req: Request, res: Response) => {
   console.log("ping");
@@ -36,25 +37,28 @@ export const login = async (req: Request, res: Response) => {
   if (req.body.email && req.body.password) {
     let email: string = req.body.email;
     let password: string = req.body.password;
+    if (validator.isEmail(email)) {
+      const user = await UserService.findByEmail(email);
 
-    const user = await UserService.findByEmail(email);
-
-    if (user && bcrypt.compareSync(password, user.password)) {
-      const token = JWT.sign(
-        { id: user.id, email: user.email, profile: user.profile },
-        process.env.JWT_SECRET_KEY as string
-      );
-      req.headers.authorization = "Bearer " + token;
-      // console.log("token do form: ", req.headers.authorization);
-      // Cookies.set("auth", req.headers.authorization);
-      res.cookie("auth", req.headers.authorization);
-      // console.log(req.cookies);
-      res.redirect(`/user/${user.id}`);
-      return;
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = await UserService.signUser(
+          user.id,
+          user.email,
+          user.profile
+        );
+        req.headers.authorization = "Bearer " + token;
+        // console.log("token do form: ", req.headers.authorization);
+        // Cookies.set("auth", req.headers.authorization);
+        res.cookie("auth", req.headers.authorization);
+        // console.log(req.cookies);
+        res.redirect(`/user/${user.id}`);
+        return;
+      }
     }
+    res.render("pages/error", { message: "Digite um email válido" });
+  } else {
+    res.redirect("/login");
   }
-
-  res.redirect("/login");
 };
 
 export const getRegister = (req: Request, res: Response) => {
@@ -74,12 +78,13 @@ export const register = async (req: Request, res: Response) => {
       profile
     );
     if (newUser instanceof Error) {
-      return res.render("pages/error", { newUser });
+      return res.render("pages/error", { message: newUser });
     } else {
       res.status(201);
-      const token = JWT.sign(
-        { id: newUser.id, email: newUser.email },
-        process.env.JWT_SECRET_KEY as string
+      const token = await UserService.signUser(
+        newUser.id,
+        newUser.email,
+        newUser.profile
       );
       req.headers.authorization = "Bearer " + token;
       res.cookie("auth", req.headers.authorization);
@@ -180,10 +185,8 @@ export const update = async (req: Request, res: Response) => {
         name,
         profile
       );
-      const token = JWT.sign(
-        { id, email, profile },
-        process.env.JWT_SECRET_KEY as string
-      );
+      const token = await UserService.signUser(id, email, profile);
+
       req.headers.authorization = "Bearer " + token;
       res.cookie("auth", req.headers.authorization);
 

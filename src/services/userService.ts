@@ -20,7 +20,7 @@ export const createUser = async (
     });
     return newUser;
   } else {
-    return new Error(`User ${email} already exists`);
+    return new Error(`Usuário ${email} já exsite!`);
   }
 };
 
@@ -94,4 +94,8 @@ export const decodedUser = async (authorizationHearder: string) => {
       return undefined;
     }
   }
+};
+
+export const signUser = async (id: number, email: string, profile: number) => {
+  return JWT.sign({ id, email, profile }, process.env.JWT_SECRET_KEY as string);
 };

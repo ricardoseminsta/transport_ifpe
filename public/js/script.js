@@ -39,7 +39,7 @@ function validateRegister() {
       }
 
       confirm(
-        `Confirme os dados:\nEmail: ${email.value}\nPerfil: ${texProfile}`
+        `Confirme os dados:\nEmail: ${email.value}\nPerfil: ${textProfile}`
       ) == true
         ? registerForm.submit()
         : window.location.reload();
