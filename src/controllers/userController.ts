@@ -24,11 +24,11 @@ export const getLogin = async (req: Request, res: Response) => {
     let decoded = await UserService.decodedUser(cookie[1]);
     console.log(decoded);
     isLogged = true;
-    res.render("pages/user/login", { isLogged, decoded });
+    return res.render("pages/user/login", { isLogged, decoded });
   }
 
   // console.log(req.headers.authorization);
-  res.render("pages/user/login", { isLogged, decoded });
+  return res.render("pages/user/login", { isLogged, decoded });
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -37,7 +37,7 @@ export const login = async (req: Request, res: Response) => {
   if (req.body.email && req.body.password) {
     let email: string = req.body.email;
     let password: string = req.body.password;
-    if (validator.isEmail(email)) {
+    if (validator.isEmail(email) && !validator.isEmpty(email)) {
       const user = await UserService.findByEmail(email);
 
       if (user && bcrypt.compareSync(password, user.password)) {
@@ -51,14 +51,12 @@ export const login = async (req: Request, res: Response) => {
         // Cookies.set("auth", req.headers.authorization);
         res.cookie("auth", req.headers.authorization);
         // console.log(req.cookies);
-        res.redirect(`/user/${user.id}`);
-        return;
+        return res.redirect(`/user/${user.id}`);
       }
     }
-    res.render("pages/error", { message: "Digite um email válido" });
-  } else {
-    res.redirect("/login");
+    return res.render("pages/error", { message: "Digite um email válido" });
   }
+  return res.redirect("/login");
 };
 
 export const getRegister = (req: Request, res: Response) => {
@@ -66,30 +64,47 @@ export const getRegister = (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  res.clearCookie("connect.sid");
-  res.clearCookie("auth");
-  if (req.body.email && req.body.password && req.body.profile) {
-    let { email, password, name, profile } = req.body;
+  let cookie = req.headers.cookie?.split("=");
 
-    const newUser = await UserService.createUser(
-      email,
-      name,
-      password,
-      profile
-    );
-    if (newUser instanceof Error) {
-      return res.render("pages/error", { message: newUser });
-    } else {
-      res.status(201);
-      const token = await UserService.signUser(
-        newUser.id,
-        newUser.email,
-        newUser.profile
+  if (cookie) {
+    if (req.body.email && req.body.password && req.body.profile) {
+      let { email, password, name, profile } = req.body;
+
+      const newUser = await UserService.createUser(
+        email,
+        name,
+        password,
+        profile
       );
-      req.headers.authorization = "Bearer " + token;
-      res.cookie("auth", req.headers.authorization);
-      res.redirect("/");
-      return;
+      if (newUser instanceof Error) {
+        return res.render("pages/error", { message: newUser });
+      }
+    }
+  } else {
+    res.clearCookie("connect.sid");
+    res.clearCookie("auth");
+    if (req.body.email && req.body.password && req.body.profile) {
+      let { email, password, name, profile } = req.body;
+
+      const newUser = await UserService.createUser(
+        email,
+        name,
+        password,
+        profile
+      );
+      if (newUser instanceof Error) {
+        return res.render("pages/error", { message: newUser });
+      } else {
+        res.status(201);
+        const token = await UserService.signUser(
+          newUser.id,
+          newUser.email,
+          newUser.profile
+        );
+        req.headers.authorization = "Bearer " + token;
+        res.cookie("auth", req.headers.authorization);
+        return res.redirect("/");
+      }
     }
   }
   res.redirect("/register");
