@@ -53,6 +53,7 @@ export const login = async (req: Request, res: Response) => {
         // console.log(req.cookies);
         return res.redirect(`/user/${user.id}`);
       }
+      return res.render("pages/error", { message: "Usuario desativado" });
     }
     return res.render("pages/error", { message: "Digite um email válido" });
   }
@@ -249,10 +250,10 @@ export const deleteUser = (req: Request, res: Response) => {
   console.log("controller delete id ", id);
 
   UserService.deleteUser(id);
-  res.redirect("/user/list");
+  return res.redirect("/user/list");
 };
 
 export const logout = (req: Request, res: Response) => {
   res.clearCookie("auth");
-  res.redirect("/login");
+  return res.redirect("/login");
 };

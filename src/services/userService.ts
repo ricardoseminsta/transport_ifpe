@@ -25,7 +25,7 @@ export const createUser = async (
 };
 
 export const findByEmail = async (email: string) => {
-  return await User.findOne({ where: { email } });
+  return await User.findOne({ where: [{ email }, { active: true }] });
 };
 
 export const findById = async (id: number) => {
@@ -46,7 +46,7 @@ export const updateUserById = async (
   email: string,
   profile: number
 ) => {
-  const user = await User.findOne({ where: { id } });
+  const user = await User.findOne({ where: [{ id }, { active: true }] });
   if (user) {
     user.set({
       email: email.toLocaleLowerCase(),
