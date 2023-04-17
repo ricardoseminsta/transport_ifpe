@@ -84,6 +84,7 @@ export const deleteUser = async (id: number) => {
 };
 
 export const decodedUser = async (authorizationHearder: string) => {
+  authorizationHearder = decodeURI(authorizationHearder);
   const [authType, token] = authorizationHearder.split(" ");
   if (authType === "Bearer") {
     // console.log("TOKEN", token);
