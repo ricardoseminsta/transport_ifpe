@@ -37,5 +37,5 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 server.use(errorHandler);
 
 server.listen(process.env.PORT, () => {
-  console.log("server started");
+  console.log("server started at port " + process.env.PORT);
 });
